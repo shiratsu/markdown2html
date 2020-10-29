@@ -1,6 +1,6 @@
 var AWS = require('aws-sdk')
 var s3 = new AWS.S3()
-var markdown = require('./node_modules/markdown');
+var marked = require('./node_modules/marked');
 
 exports.handler = async (event) => {
     console.log("*** start ***")
@@ -22,12 +22,13 @@ exports.handler = async (event) => {
     let markdownBody = (new Buffer(srcData.Body)).toString();
     console.log(markdownBody);
 
-    let htmlBody = markdown.toHTML(markdownBody);
+    let htmlBody = marked(markdownBody);
 
     let html = `
     <!DOCTYPE html>
     <html>
       <head>
+      <meta charset="utf-8">
         <title>Converted from s3://${bucketName}/${event.Records[0].s3.object.key}</title>
       </head>
       <body>
